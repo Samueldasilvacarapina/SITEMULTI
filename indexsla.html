@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Multifuncional Completo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 95%;
+            margin: 20px auto;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        button {
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #eee;
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .dark-mode {
+            background: #222;
+            color: #fff;
+        }
+
+        .dark-mode .card {
+            background: #333;
+            color: #fff;
+        }
+
+        .shortcuts a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 15px;
+            background: #2196F3;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .shortcuts a:hover {
+            background: #0b7dda;
+        }
+
+        .weather,
+        .music-player,
+        .timer {
+            text-align: center;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .fav-links a {
+            display: block;
+            padding: 5px;
+            background: #ddd;
+            margin: 3px 0;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🛠 Painel Multifuncional Completo</h1>
+        <button id="toggleMode">🌙 Modo Escuro</button>
+        <p id="clock">⏰</p>
+    </header>
+
+    <div class="container">
+        <!-- Bloco de Anotações -->
+        <div class="card">
+            <h2>📒 Bloco de Anotações</h2>
+            <textarea id="notepad" placeholder="Digite suas anotações..."></textarea>
+            <button onclick="saveNotes()">💾 Salvar</button>
+        </div>
+
+        <!-- Lista de Tarefas -->
+        <div class="card">
+            <h2>✅ Lista de Tarefas</h2>
+            <input type="text" id="taskInput" placeholder="Nova tarefa">
+            <button onclick="addTask()">➕ Adicionar</button>
+            <ul id="taskList"></ul>
+        </div>
+
+        <!-- Calculadora Científica -->
+        <div class="card">
+            <h2>🧮 Calculadora Científica</h2>
+            <input type="text" id="calcDisplay" readonly>
+            <div>
+                <button onclick="press('Math.sin(')">sin</button>
+                <button onclick="press('Math.cos(')">cos</button>
+                <button onclick="press('Math.tan(')">tan</button>
+                <button onclick="press('Math.sqrt(')">√</button>
+            </div>
+            <div>
+                <button onclick="press('7')">7</button>
+                <button onclick="press('8')">8</button>
+                <button onclick="press('9')">9</button>
+                <button onclick="press('/')">÷</button>
+            </div>
+            <div>
+                <button onclick="press('4')">4</button>
+                <button onclick="press('5')">5</button>
+                <button onclick="press('6')">6</button>
+                <button onclick="press('*')">×</button>
+            </div>
+            <div>
+                <button onclick="press('1')">1</button>
+                <button onclick="press('2')">2</button>
+                <button onclick="press('3')">3</button>
+                <button onclick="press('-')">-</button>
+            </div>
+            <div>
+                <button onclick="press('0')">0</button>
+                <button onclick="press('.')">.</button>
+                <button onclick="calculate()">=</button>
+                <button onclick="press('+')">+</button>
+            </div>
+            <button onclick="clearCalc()">🧹 Limpar</button>
+        </div>
+
+        <!-- Conversor de Moedas -->
+        <div class="card">
+            <h2>💱 Conversor de Moedas</h2>
+            <input type="number" id="brlValue" placeholder="Valor em BRL">
+            <button onclick="convertCurrency()">Converter para USD</button>
+            <p id="currencyResult">Resultado: </p>
+        </div>
+
+        <!-- Atalhos -->
+        <div class="card">
+            <h2>🔗 Atalhos Rápidos</h2>
+            <div class="shortcuts">
+                <a href="https://www.google.com" target="_blank">Google</a>
+                <a href="https://www.youtube.com" target="_blank">YouTube</a>
+                <a href="https://mail.google.com" target="_blank">Gmail</a>
+                <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
+            </div>
+        </div>
+
+        <!-- Previsão do Tempo -->
+        <div class="card weather">
+            <h2>🌤 Previsão do Tempo</h2>
+            <input type="text" id="city" placeholder="Digite sua cidade">
+            <button onclick="getWeather()">Ver Clima</button>
+            <p id="weatherResult">Informe uma cidade</p>
+        </div>
+
+        <!-- Player de Música -->
+        <div class="card music-player">
+            <h2>🎵 Player de Música</h2>
+            <audio controls>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <!-- Gerador de Senhas -->
+        <div class="card">
+            <h2>🔐 Gerador de Senhas</h2>
+            <button onclick="generatePassword()">Gerar Senha Segura</button>
+            <p id="passwordResult">Clique para gerar</p>
+        </div>
+
+        <!-- Cronômetro -->
+        <div class="card timer">
+            <h2>⏱ Cronômetro</h2>
+            <p id="chrono">00:00:00</p>
+            <button onclick="startChrono()">Iniciar</button>
+            <button onclick="stopChrono()">Parar</button>
+            <button onclick="resetChrono()">Reset</button>
+        </div>
+
+        <!-- Temporizador -->
+        <div class="card timer">
+            <h2>⏳ Temporizador</h2>
+            <input type="number" id="timerInput" placeholder="Segundos">
+            <button onclick="startTimer()">Começar</button>
+            <p id="timerDisplay">00</p>
+        </div>
+
+        <!-- Texto para Voz -->
+        <div class="card">
+            <h2>🗣 Texto para Voz</h2>
+            <textarea id="ttsText" placeholder="Digite um texto para ouvir"></textarea>
+            <button onclick="speakText()">🔊 Falar</button>
+        </div>
+
+        <!-- Agenda Diária -->
+        <div class="card">
+            <h2>📅 Agenda Diária</h2>
+            <textarea id="agenda" placeholder="Suas tarefas do dia..."></textarea>
+            <button onclick="saveAgenda()">Salvar Agenda</button>
+        </div>
+
+        <!-- Links Favoritos -->
+        <div class="card">
+            <h2>⭐ Links Favoritos</h2>
+            <input type="text" id="favName" placeholder="Nome do site">
+            <input type="text" id="favURL" placeholder="URL do site">
+            <button onclick="addFavLink()">Adicionar</button>
+            <div id="favLinks" class="fav-links"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("clock").innerText = now.toLocaleString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const notepad = document.getElementById("notepad");
+        notepad.value = localStorage.getItem("notes") || "";
+        function saveNotes() { localStorage.setItem("notes", notepad.value); }
+
+        const taskList = document.getElementById("taskList");
+        function loadTasks() { const saved = JSON.parse(localStorage.getItem("tasks") || "[]"); saved.forEach(t => createTask(t.text, t.done)); }
+        function createTask(text, done = false) { const li = document.createElement("li"); const chk = document.createElement("input"); chk.type = "checkbox"; chk.checked = done; chk.onchange = saveTasks; const span = document.createElement("span"); span.textContent = text; const del = document.createElement("button"); del.textContent = "❌"; del.onclick = () => { li.remove(); saveTasks(); }; li.append(chk, span, del); taskList.appendChild(li); }
+        function addTask() { const val = document.getElementById("taskInput").value; if (val) { createTask(val); document.getElementById("taskInput").value = ""; saveTasks(); } }
+        function saveTasks() { const tasks = []; taskList.querySelectorAll("li").forEach(li => { tasks.push({ text: li.querySelector("span").textContent, done: li.querySelector("input").checked }); }); localStorage.setItem("tasks", JSON.stringify(tasks)); }
+        loadTasks();
+
+        const calcDisplay = document.getElementById("calcDisplay");
+        function press(v) { calcDisplay.value += v; }
+        function calculate() { try { calcDisplay.value = eval(calcDisplay.value); } catch { alert("Erro"); } }
+        function clearCalc() { calcDisplay.value = ""; }
+
+        function convertCurrency() { const brl = parseFloat(document.getElementById("brlValue").value); if (isNaN(brl)) return alert("Digite valor"); const rate = 0.2; const usd = (brl * rate).toFixed(2); document.getElementById("currencyResult").innerText = `Resultado: $${usd} USD`; }
+
+        const toggleBtn = document.getElementById("toggleMode");
+        toggleBtn.onclick = () => { document.body.classList.toggle("dark-mode"); toggleBtn.textContent = document.body.classList.contains("dark-mode") ? "☀️ Modo Claro" : "🌙 Modo Escuro"; };
+
+        function getWeather() { const city = document.getElementById("city").value; if (!city) return alert("Digite cidade"); document.getElementById("weatherResult").innerText = `☀️ ${city}: 26°C Ensolarado`; }
+
+        function generatePassword() { const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*"; let pass = ""; for (let i = 0; i < 12; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length)); document.getElementById("passwordResult").innerText = pass; }
+
+        let chronoInterval, chronoSec = 0;
+        function startChrono() { if (chronoInterval) return; chronoInterval = setInterval(() => { chronoSec++; document.getElementById("chrono").innerText = new Date(chronoSec * 1000).toISOString().substr(11, 8); }, 1000); }
+        function stopChrono() { clearInterval(chronoInterval); chronoInterval = null; }
+        function resetChrono() { stopChrono(); chronoSec = 0; document.getElementById("chrono").innerText = "00:00:00"; }
+
+        function startTimer() { let time = parseInt(document.getElementById("timerInput").value); if (isNaN(time)) return alert("Digite segundos"); document.getElementById("timerDisplay").innerText = time; const intv = setInterval(() => { time--; document.getElementById("timerDisplay").innerText = time; if (time <= 0) { clearInterval(intv); alert("⏰ Tempo acabou!"); } }, 1000); }
+
+        function speakText() { const txt = document.getElementById("ttsText").value; const utter = new SpeechSynthesisUtterance(txt); speechSynthesis.speak(utter); }
+
+        const agenda = document.getElementById("agenda"); agenda.value = localStorage.getItem("agenda") || ""; function saveAgenda() { localStorage.setItem("agenda", agenda.value); }
+
+        function loadFavLinks() { const saved = JSON.parse(localStorage.getItem("favLinks") || "[]"); saved.forEach(f => createFavLink(f.name, f.url)); }
+        function createFavLink(name, url) { const link = document.createElement("a"); link.href = url; link.textContent = name; link.target = "_blank"; document.getElementById("favLinks").appendChild(link); }
+        function addFavLink() { const n = document.getElementById("favName").value; const u = document.getElementById("favURL").value; if (!n || !u) return; createFavLink(n, u); let saved = JSON.parse(localStorage.getItem("favLinks") || "[]"); saved.push({ name: n, url: u }); localStorage.setItem("favLinks", JSON.stringify(saved)); document.getElementById("favName").value = ""; document.getElementById("favURL").value = ""; }
+        loadFavLinks();
+    </script>
+
+</body>
+
+</html>
